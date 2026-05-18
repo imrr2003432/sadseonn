@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سادسيون نحو النجاح - إدارة الحسابات</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- تصميم المنصة التعليمية الزجاجي الأبيض الفاخر --- */
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* خلفية بتدرجات الأبيض والرمادي الثلجي الفخم */
+            background: linear-gradient(-45deg, #eef2f3, #ffffff, #e4e7eb, #ffffff);
+            background-size: 400% 400%;
+            animation: lightGradient 14s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes lightGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* كرات إضاءة بيضاء وفضية ناعمة جداً في الخلفية لتعزيز تأثير الزجاج */
+        .ambient-glow {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(226,232,240,0.8) 60%, transparent 100%);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            z-index: 1;
+            top: -10%;
+            right: 10%;
+            animation: floatGlow 12s ease-in-out infinite alternate;
+        }
+        
+        .ambient-glow-2 {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(241,245,249,1) 0%, rgba(203,213,225,0.6) 70%, transparent 100%);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.5;
+            z-index: 1;
+            bottom: -5%;
+            left: 15%;
+            animation: floatGlow 15s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, 30px) scale(1.15); }
+        }
+
+        /* كرت اللوح الزجاجي الأبيض المصقول */
+        .card {
+            background: rgba(255, 255, 255, 0.45); /* زجاجي أبيض شفاف */
+            padding: 40px 35px;
+            border-radius: 28px;
+            /* حد زجاجي أبيض ناصع ومضيء لإبراز الأطراف */
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            width: 430px;
+            z-index: 2;
+            box-shadow: 0 20px 50px rgba(148, 163, 184, 0.15), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            animation: cardEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: scale(0.96) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* تنسيق الشعار واسم الموقع العلوي */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brand-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ffffff, #f1f5f9);
+            border-radius: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 12px auto;
+            box-shadow: 0 8px 20px rgba(148, 163, 184, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .brand-logo i {
+            font-size: 26px;
+            color: #1e293b; /* لون داكن فخم للأيقونة ليبرز فوق الأبيض */
+        }
+
+        .brand-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: -0.3px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #475569;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748b;
+            padding-right: 4px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(203, 213, 225, 0.6);
+            border-radius: 16px;
+            font-size: 15px;
+            color: #1e293b;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        input:focus {
+            background: #ffffff;
+            border-color: #94a3b8;
+            box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.12);
+        }
+
+        /* --- أزرار اختيار القسم (علمي / أدبي) باللون الأبيض الفخم --- */
+        .department-container {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .dept-btn {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(203, 213, 225, 0.6);
+            color: #64748b;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dept-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            color: #1e293b;
+            border-color: rgba(148, 163, 184, 0.5);
+        }
+
+        /* تفعيل الزر الأبيض واختياره */
+        .dept-btn.active {
+            background: #ffffff;
+            border-color: #1e293b;
+            color: #1e293b;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(148, 163, 184, 0.15);
+        }
+
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .toggle-password {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.2s;
+            font-size: 17px;
+            z-index: 10;
+        }
+        
+        .toggle-password:hover {
+            color: #1e293b;
+        }
+
+        .password-wrapper input {
+            padding-left: 50px;
+        }
+
+        /* زر الإرسال الرئيسي (تدرج رمادي داكن فخم مأخوذ من أسلوب Apple الاحترافي) */
+        button[type="submit"] {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: #ffffff;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 15px rgba(30, 41, 59, 0.15);
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 41, 59, 0.25);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            font-size: 13px;
+        }
+
+        a {
+            color: #64748b;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #1e293b;
+            text-decoration: underline;
+        }
+
+        .view {
+            display: none;
+        }
+        .active-view {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+    <div class="ambient-glow-2"></div>
+
+    <div class="card">
+        
+        <div class="brand-header">
+            <div class="brand-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="brand-name">سادسيون نحو النجاح</div>
+        </div>
+
+        <div id="loginView" class="view active-view">
+            <h2>تسجيل الدخول</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('loginPassword', this)"></i>
+                    </div>
+                </div>
+                <button type="submit">دخول</button>
+            </form>
+            <div class="links">
+                <a onclick="switchView('registerView')">إنشاء حساب جديد</a>
+                <a onclick="switchView('forgotView')" style="color: #ef4444;">نسيت كلمة المرور؟</a>
+            </div>
+        </div>
+
+        <div id="registerView" class="view">
+            <h2>حساب جديد</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>اسم المستخدم</label>
+                    <input type="text" id="regUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="regPassword" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('regPassword', this)"></i>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>تحديد القسم الدراسي</label>
+                    <div class="department-container">
+                        <div type="button" class="dept-btn" id="btnScientific" onclick="selectDepartment('scientific')">
+                            <span>علمي</span> 🧬
+                        </div>
+                        <div type="button" class="dept-btn" id="btnLiterary" onclick="selectDepartment('literary')">
+                            <span>أدبي</span> 📚
+                        </div>
+                    </div>
+                    <input type="hidden" id="regDepartment" value="" required>
+                </div>
+
+                <button type="submit">تسجيل الحساب</button>
+            </form>
+            <div class="links">
+                <a onclick="switchView('loginView')">لديك حساب بالفعل؟ سجل دخولك</a>
+            </div>
+        </div>
+
+        <div id="forgotView" class="view">
+            <h2>استعادة الحساب</h2>
+            <form id="forgotForm">
+                <div class="form-group">
+                    <label>أدخل بريدك الإلكتروني المسجل</label>
+                    <input type="email" id="forgotEmail" required>
+                </div>
+                <button type="submit">إرسال رابط إعادة التعيين</button>
+            </form>
+            <div class="links">
+                <a onclick="switchView('loginView')">العودة لتسجيل الدخول</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://bnuewppdnpirceiuqxvb.supabase.co"; 
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJudWV3cHBkbnBpcmNlaXVxeHZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NjU5ODUsImV4cCI6MjA5NDU0MTk4NX0.F0YOcZLFbKtUTe2xkoI-NRvMkY7UjBrhsNEQp79SrJQ"; 
+        
+        const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function selectDepartment(value) {
+            document.getElementById('regDepartment').value = value;
+            
+            document.getElementById('btnScientific').classList.remove('active');
+            document.getElementById('btnLiterary').classList.remove('active');
+            
+            if(value === 'scientific') {
+                document.getElementById('btnScientific').classList.add('active');
+            } else if(value === 'literary') {
+                document.getElementById('btnLiterary').classList.add('active');
+            }
+        }
+
+        function togglePasswordVisibility(inputId, iconElement) {
+            const passwordInput = document.getElementById(inputId);
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                iconElement.classList.remove("fa-eye");
+                iconElement.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                iconElement.classList.remove("fa-eye-slash");
+                iconElement.classList.add("fa-eye");
+            }
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.remove('active-view');
+            });
+            document.getElementById(viewId).classList.add('active-view');
+        }
+
+        // 1. معالجة إنشاء حساب جديد
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const username = document.getElementById('regUsername').value;
+            const department = document.getElementById('regDepartment').value;
+
+            if(!department) {
+                alert("يرجى اختيار القسم الدراسي أولاً (علمي أو أدبي)");
+                return;
+            }
+
+            const { data, error } = await db.auth.signUp({ email, password });
+
+            if (error) {
+                alert("خطأ في إنشاء الحساب: " + error.message);
+            } else if (data.user) {
+                const { error: profileError } = await db
+                    .from('profiles')
+                    .insert([{ id: data.user.id, username: username, department: department }]);
+                
+                if (profileError) {
+                    alert("تم الحساب ولكن فشل حفظ بيانات القسم الدراسي: " + profileError.message);
+                } else {
+                    alert("تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول.");
+                    switchView('loginView');
+                }
+            }
+        });
+
+        // 2. معالجة تسجيل الدخول والتحويل لملف الداشبورد
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const { data, error } = await db.auth.signInWithPassword({ email, password });
+
+            if (error) {
+                alert("فشل تسجيل الدخول: " + error.message);
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        // 3. معالجة استعادة كلمة المرور
+        document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+
+            const { data, error } = await db.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.href
+            });
+
+            if (error) {
+                alert("حدث خطأ: " + error.message);
+            } else {
+                alert("تم إرسال رابط إعادة تعيين كلمة المرور بنجاح.");
+                switchView('loginView');
+            }
+        });
+
+        async function autoLoginCheck() {
+            const { data: { user } } = await db.auth.getUser();
+            if (user) {
+                window.location.href = 'dashboard.html';
+            }
+        }
+        autoLoginCheck();
+    </script>
+</body>
+</html>

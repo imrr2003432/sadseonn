@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سادسيون نحو النجاح | لوحة التحكم</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- تصميم الأجواء الثلجية والكروت الطافية الفاخرة --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f9;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        /* حاوية جزيئات الثلج */
+        #snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* لمنع حجب النقرات عن العناصر */
+            overflow: hidden;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: #ffffff;
+            font-size: 1em;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(255,255,255,0.8);
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(105vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* كود الثيم المظلم الثلجي */
+        body.dark-theme {
+            background-color: #0b0f19;
+            color: #f1f5f9;
+        }
+        body.dark-theme .navbar,
+        body.dark-theme .sidebar,
+        body.dark-theme .welcome-section,
+        body.dark-theme .subject-card,
+        body.dark-theme .settings-modal-content,
+        body.dark-theme .chapter-card,
+        body.dark-theme .lecture-item,
+        body.dark-theme .video-container,
+        body.dark-theme .year-card,
+        body.dark-theme .progress-container {
+            background: rgba(21, 32, 54, 0.7);
+            border-color: rgba(255, 255, 255, 0.08);
+            color: #f1f5f9;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        body.dark-theme .welcome-section h1,
+        body.dark-theme .welcome-section p,
+        body.dark-theme .subject-card h3,
+        body.dark-theme .subject-card p,
+        body.dark-theme .sidebar-item,
+        body.dark-theme .nav-logo,
+        body.dark-theme .subjects-title,
+        body.dark-theme .settings-modal h2,
+        body.dark-theme .setting-group label,
+        body.dark-theme .contact-channel span,
+        body.dark-theme .chapter-card h3,
+        body.dark-theme .lecture-item span,
+        body.dark-theme .year-card h3,
+        body.dark-theme .progress-text {
+            color: #f1f5f9;
+        }
+        body.dark-theme .sidebar-item:hover,
+        body.dark-theme .subject-card:hover,
+        body.dark-theme .chapter-card:hover,
+        body.dark-theme .lecture-item:hover,
+        body.dark-theme .year-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        body.dark-theme .username-display {
+            background: rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        body.dark-theme .setting-group input,
+        body.dark-theme .setting-group select {
+            background: #152036;
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        body.dark-theme .contact-channel {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            height: 75px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4%;
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+        }
+
+        .nav-logo {
+            color: #1e293b;
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .nav-logo .logo-box {
+            width: 42px;
+            height: 42px;
+            background: #ffffff;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 16px rgba(15, 23, 42, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-logo .logo-box i { color: #1e293b; font-size: 20px; }
+        .user-info { display: flex; align-items: center; gap: 20px; }
+
+        .username-display {
+            color: #475569;
+            font-weight: 700;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35);
+        }
+
+        .dashboard-layout {
+            display: flex;
+            flex-grow: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: fixed;
+            right: 0;
+            top: 75px;
+            bottom: 0;
+            z-index: 1000;
+            box-shadow: -10px 10px 40px rgba(15, 23, 42, 0.03);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .sidebar.closed { transform: translateX(100%); }
+
+        .toggle-sidebar-btn {
+            position: absolute;
+            top: 25px;
+            left: -35px;
+            width: 35px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-right: none;
+            border-radius: 12px 0 0 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: #1e293b;
+            font-size: 16px;
+            box-shadow: -5px 4px 15px rgba(148, 163, 184, 0.08);
+            transition: all 0.3s ease;
+            z-index: 1002;
+        }
+
+        .toggle-sidebar-btn:hover { background: #ffffff; color: #0f172a; padding-right: 5px; }
+        .toggle-sidebar-btn i { transition: transform 0.4s ease; }
+        .sidebar.closed .toggle-sidebar-btn i { transform: rotate(180deg); }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            color: #475569;
+            font-weight: 500;
+            font-size: 15px;
+            text-decoration: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+        }
+
+        .sidebar-item i { font-size: 18px; width: 24px; text-align: center; }
+        .sidebar-item:hover { background: rgba(255, 255, 255, 0.9); color: #1e293b; border-color: rgba(255, 255, 255, 0.9); padding-right: 22px; }
+        .sidebar-item.active { background: #ffffff; color: #1e293b; font-weight: 700; border-color: rgba(203, 213, 225, 0.5); box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05); }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1140px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* الكروت الطافية (Floating Design) والمعزولة زجاجياً */
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.65);
+            padding: 40px;
+            border-radius: 28px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08); /* ظل طافٍ ممتد */
+            margin-bottom: 40px;
+            animation: cardEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(0);
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: scale(0.96) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .welcome-section h1 { font-size: 30px; color: #1e293b; margin-bottom: 12px; font-weight: 700; }
+        .welcome-section p { color: #64748b; font-size: 16px; font-weight: 500; }
+        .subjects-title { font-size: 20px; font-weight: 700; color: #475569; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            padding: 8px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            transition: all 0.2s;
+        }
+        .back-btn:hover { background: #ffffff; color: #0f172a; transform: translateX(3px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); }
+
+        .subjects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; animation: cardEntrance 0.6s ease; }
+        
+        /* كارت المواد الطافي بامتياز */
+        .subject-card {
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 24px;
+            padding: 30px 25px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px rgba(15, 23, 42, 0.06); /* تأثير طوفان عميق */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* تأثير الصعود السلس عند التمرير */
+        .subject-card:hover { 
+            background: rgba(255, 255, 255, 0.85); 
+            transform: translateY(-12px); /* رفعة الكارت الطافي */
+            box-shadow: 0 35px 70px rgba(15, 23, 42, 0.12); /* تكبير الظل لتعزيز الطوفان */
+            border-color: rgba(255, 255, 255, 0.95); 
+        }
+
+        .subject-icon { width: 65px; height: 65px; background: #ffffff; border-radius: 20px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05); border: 1px solid rgba(255, 255, 255, 0.9); color: #1e293b; font-size: 26px; }
+        .subject-card h3 { font-size: 19px; color: #1e293b; margin-bottom: 8px; font-weight: 700; }
+        .subject-card p { color: #64748b; font-size: 13px; margin-bottom: 20px; font-weight: 500; line-height: 1.5; }
+
+        .enter-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #1e293b, #334155); color: #ffffff; border: none; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(30, 41, 59, 0.1); }
+        .enter-btn:hover { background: linear-gradient(135deg, #0f172a, #1e293b); box-shadow: 0 6px 15px rgba(30, 41, 59, 0.2); }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.05);
+            animation: cardEntrance 0.4s ease;
+        }
+        .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .progress-text { font-size: 15px; font-weight: 700; color: #334155; }
+        .progress-bar-bg { width: 100%; height: 12px; background: rgba(148, 163, 184, 0.2); border-radius: 50px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(135deg, #22c55e, #16a34a); border-radius: 50px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .complete-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.2s;
+        }
+        .complete-action-btn.not-done { background: rgba(30, 41, 59, 0.1); color: #1e293b; }
+        .complete-action-btn.not-done:hover { background: rgba(30, 41, 59, 0.2); }
+        .complete-action-btn.done { background: rgba(34, 197, 94, 0.15); color: #16a34a; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .complete-action-btn.done:hover { background: rgba(34, 197, 94, 0.25); }
+
+        .lecture-item .fa-check-circle { color: #22c55e; font-size: 18px; }
+
+        /* كرت السنوات الطافي */
+        .year-card {
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            padding: 24px;
+            border-radius: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        .year-card:hover { background: #ffffff; transform: translateY(-10px); box-shadow: 0 30px 60px rgba(15, 23, 42, 0.12); border-color: #1e293b; }
+        .year-card h3 { font-size: 20px; font-weight: 700; color: #1e293b; }
+        .year-card span { font-size: 12px; color: #64748b; font-weight: 500; }
+
+        .ministerial-list-container { display: flex; flex-direction: column; gap: 15px; animation: cardEntrance 0.5s ease; }
+        
+        /* كرت الأدوار الوزارية الطافي */
+        .exam-role-item {
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            padding: 18px 25px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 15px 30px rgba(15, 23, 42, 0.03);
+            transition: all 0.3s ease;
+        }
+        .exam-role-item:hover { background: #ffffff; transform: translateY(-4px); box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08); border-color: #22c55e; }
+        .exam-role-item span { font-weight: 700; font-size: 15px; color: #334155; }
+        .exam-role-item i { color: #64748b; font-size: 18px; }
+        .exam-role-item:hover i { color: #22c55e; }
+
+        /* كارت الفصول الطافي */
+        .chapter-card {
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            padding: 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04);
+        }
+        .chapter-card:hover { background: #ffffff; transform: translateY(-6px); box-shadow: 0 28px 55px rgba(15, 23, 42, 0.1); }
+        .chapter-card h3 { font-size: 18px; font-weight: 700; color: #1e293b; }
+        .chapter-card i { font-size: 18px; color: #64748b; }
+
+        .lectures-list-container { display: flex; flex-direction: column; gap: 12px; animation: cardEntrance 0.5s ease; }
+        
+        /* كارت المحاضرات الطافي */
+        .lecture-item {
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            padding: 18px 25px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 12px 25px rgba(15, 23, 42, 0.03);
+            transition: all 0.3s;
+        }
+        .lecture-item:hover { background: #ffffff; transform: translateY(-4px); box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08); border-color: #1e293b; }
+        .lecture-item span { font-weight: 700; font-size: 15px; color: #334155; }
+        .lecture-item .play-icon-btn { color: #1e293b; font-size: 18px; }
+
+        .video-player-section { margin-bottom: 35px; animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 24px;
+            background: #000000;
+            box-shadow: 0 35px 75px rgba(15, 23, 42, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        .settings-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .settings-modal.open { opacity: 1; pointer-events: auto; }
+        .settings-modal-content { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.6); width: 90%; max-width: 500px; border-radius: 28px; padding: 35px; box-shadow: 0 30px 70px rgba(15, 23, 42, 0.2); transform: scale(0.9) translateY(20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); position: relative; }
+        .settings-modal.open .settings-modal-content { transform: scale(1) translateY(0); }
+        .close-settings-btn { position: absolute; top: 25px; left: 25px; background: none; border: none; font-size: 20px; color: #64748b; cursor: pointer; transition: color 0.2s; }
+        .close-settings-btn:hover { color: #ef4444; }
+        .settings-modal h2 { font-size: 22px; font-weight: 700; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; color: #1e293b; }
+        .setting-section-title { font-size: 14px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid rgba(148, 163, 184, 0.2); padding-bottom: 5px; }
+        .setting-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .setting-group label { font-size: 14px; font-weight: 500; color: #475569; }
+        .setting-group input, .setting-group select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.4); background: rgba(255, 255, 255, 0.6); font-size: 14px; outline: none; transition: border-color 0.2s; }
+        .setting-group input:focus, .setting-group select:focus { border-color: #1e293b; }
+        
+        .theme-options { display: flex; gap: 15px; margin-bottom: 25px; }
+        .theme-btn { flex: 1; padding: 12px; border: 1px solid rgba(148, 163, 184, 0.4); background: rgba(255, 255, 255, 0.6); border-radius: 12px; cursor: pointer; font-weight: 500; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.2s; }
+        .theme-btn.active { background: #1e293b; color: #ffffff; border-color: #1e293b; }
+
+        .contact-channels-container { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+        .contact-channel { display: flex; align-items: center; gap: 15px; padding: 14px 20px; border-radius: 16px; background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(148, 163, 184, 0.2); text-decoration: none; transition: all 0.25s ease; }
+        .contact-channel:hover { transform: translateX(-5px); background: #ffffff; box-shadow: 0 8px 20px rgba(148, 163, 184, 0.08); }
+        .contact-channel i { font-size: 22px; width: 30px; text-align: center; }
+        .contact-channel .fa-telegram { color: #0088cc; }
+        .contact-channel .fa-instagram { color: #e1306c; }
+        .contact-channel .fa-youtube { color: #ff0000; }
+        .contact-channel span { font-size: 15px; font-weight: 700; color: #334155; }
+
+        .save-settings-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #1e293b, #334155); color: #ffffff; border: none; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(30, 41, 59, 0.1); transition: all 0.2s; }
+        .save-settings-btn:hover { background: linear-gradient(135deg, #0f172a, #1e293b); }
+
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f1f5f9; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 55px; height: 55px; border: 4px solid rgba(30, 41, 59, 0.1); border-top-color: #1e293b; border-radius: 50%; animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 0 15px; }
+            .username-display { display: none; }
+            .sidebar { width: 260px; box-shadow: -10px 0 30px rgba(0,0,0,0.12); }
+            .main-content { padding: 20px 15px; }
+            .welcome-section { padding: 25px 15px; border-radius: 20px; }
+            .welcome-section h1 { font-size: 22px; }
+            .subjects-grid { grid-template-columns: 1fr; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="snow-container"></div>
+
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-logo" onclick="playClickSound()">
+            <div class="logo-box">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <span>سادسيون نحو النجاح</span>
+        </div>
+        
+        <div class="user-info">
+            <span class="username-display" id="displayUser">جاري التحميل...</span>
+            <button class="logout-btn" onclick="playClickSound(); logout()">
+                <i class="fas fa-sign-out-alt"></i> خروج
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <aside class="sidebar" id="sidebarMenu">
+            <div class="toggle-sidebar-btn" onclick="playClickSound(); toggleSidebar()">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <a class="sidebar-item active" id="navHome" onclick="playClickSound(); navigateTo('home')">
+                <i class="fas fa-th-large"></i> <span>الرئيسية</span>
+            </a>
+            <a class="sidebar-item" id="navLectures" onclick="playClickSound(); navigateTo('lectures')">
+                <i class="fas fa-video"></i> <span>المحاضرات</span>
+            </a>
+            <a class="sidebar-item" id="navFiles" onclick="playClickSound()">
+                <i class="fas fa-file-pdf"></i> <span>الملازم والملخصات</span>
+            </a>
+            <a class="sidebar-item" id="navMinis" onclick="playClickSound(); navigateTo('minis')">
+                <i class="fas fa-paste"></i> <span>الأسئلة الوزارية</span>
+            </a>
+            <a class="sidebar-item" id="navExams" onclick="playClickSound()">
+                <i class="fas fa-user-check"></i> <span>الاختبارات الذكية</span>
+            </a>
+            <a class="sidebar-item" onclick="playClickSound(); openSettings()">
+                <i class="fas fa-sliders-h"></i> <span>الإعدادات</span>
+            </a>
+            <a class="sidebar-item" onclick="playClickSound(); openContact()">
+                <i class="fas fa-comments"></i> <span>اتصل بنا</span>
+            </a>
+        </aside>
+
+        <main class="main-content" id="mainContent">
+            <section class="welcome-section">
+                <h1 id="welcomeTitle">أهلاً بك في رحلة النجاح المتميزة</h1>
+                <p id="welcomeSub">مساحتك التعليمية المتكاملة للتحضير للتفوق والدرجة الكاملة.</p>
+            </section>
+
+            <div id="backNavContainer"></div>
+            <div id="progressArea"></div>
+
+            <h2 class="subjects-title" id="sectionTitle"><i class="fas fa-book-open"></i> موادك المنهجية المتاحة:</h2>
+            
+            <div id="dynamicContent" class="subjects-grid">
+                </div>
+        </main>
+    </div>
+
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-modal-content">
+            <button class="close-settings-btn" onclick="playClickSound(); closeSettings()"><i class="fas fa-times"></i></button>
+            <h2><i class="fas fa-cog"></i> إعدادات المنصة</h2>
+            <div class="setting-section-title">تعديل البروفايل</div>
+            <div class="setting-group">
+                <label for="settingsUsername">اسم المستخدم</label>
+                <input type="text" id="settingsUsername">
+            </div>
+            <div class="setting-group">
+                <label for="settingsDept">الفرع الدراسي</label>
+                <select id="settingsDept" onchange="playClickSound()">
+                    <option value="scientific">الفرع العلمي</option>
+                    <option value="literary">الفرع الأدبي</option>
+                </select>
+            </div>
+            <div class="setting-section-title">مظهر المنصة (الثيمات)</div>
+            <div class="theme-options">
+                <button class="theme-btn active" id="lightThemeBtn" onclick="playClickSound(); setTheme('light')"><i class="fas fa-sun"></i> ثلجي طافٍ</button>
+                <button class="theme-btn" id="darkThemeBtn" onclick="playClickSound(); setTheme('dark')"><i class="fas fa-moon"></i> ليل شتوي</button>
+            </div>
+            <button class="save-settings-btn" onclick="playClickSound(); saveSettings()">حفظ التغييرات</button>
+        </div>
+    </div>
+
+    <div class="settings-modal" id="contactModal">
+        <div class="settings-modal-content">
+            <button class="close-settings-btn" onclick="playClickSound(); closeContact()"><i class="fas fa-times"></i></button>
+            <h2><i class="fas fa-headset"></i> قنوات الدعم والتواصل</h2>
+            <div class="setting-section-title">تواصل معنا مباشرة</div>
+            <div class="contact-channels-container">
+                <a href="#" target="_blank" class="contact-channel" onclick="playClickSound()"><i class="fab fa-telegram"></i> <span>قناة التليجرام الرسمية</span></a>
+                <a href="#" target="_blank" class="contact-channel" onclick="playClickSound()"><i class="fab fa-instagram"></i> <span>حساب الإنستغرام</span></a>
+                <a href="#" target="_blank" class="contact-channel" onclick="playClickSound()"><i class="fab fa-youtube"></i> <span>قناة اليوتيوب التعليمية</span></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://bnuewppdnpirceiuqxvb.supabase.co"; 
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJudWV3cHBkbnBpcmNlaXVxeHZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NjU5ODUsImV4cCI6MjA5NDU0MTk4NX0.F0YOcZLFbKtUTe2xkoI-NRvMkY7UjBrhsNEQp79SrJQ"; 
+        const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+        let userDepartment = 'scientific';
+        let currentSelectedSubject = ''; 
+        let currentSelectedChapter = 1;
+
+        const TOTAL_LECTURES_PER_CHAPTER = 60; 
+
+        // =========================================================================
+        // ❄️ دالة توليد تأثير تساقط الثلج السلس والتلقائي
+        // =========================================================================
+        function createSnowfall() {
+            const container = document.getElementById('snow-container');
+            const flakesCount = 50; // عدد جزيئات الثلج الشغالة بالشاشة
+            const flakesSymbols = ['❄', '•', '✧', '❄️'];
+
+            for (let i = 0; i < flakesCount; i++) {
+                const flake = document.createElement('div');
+                flake.className = 'snowflake';
+                flake.innerText = flakesSymbols[Math.floor(Math.random() * flakesSymbols.length)];
+                
+                // تحديد إحداثيات عشوائية للبث
+                flake.style.left = Math.random() * 100 + 'vw';
+                
+                // تحديد أحجام وسرعات عشوائية متناسقة لتعطي عمق حركي سلس
+                const size = (Math.random() * 0.8 + 0.4) + 'em';
+                flake.style.fontSize = size;
+                
+                const duration = (Math.random() * 7 + 5) + 's'; // سرعة السقوط بين 5 إلى 12 ثانية
+                flake.style.animationDuration = duration;
+                
+                const delay = Math.random() * -12 + 's'; // تأخير عشوائي حتى يبدأ الثلج فوراً عند فتح الصفحة
+                flake.style.animationDelay = delay;
+                
+                container.appendChild(flake);
+            }
+        }
+
+        // =========================================================================
+        // 🔊 دالة صوت كلك الماوس (Windows/Physical Mouse Click)
+        // =========================================================================
+        function playClickSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const now = ctx.currentTime;
+                
+                const osc1 = ctx.createOscillator();
+                const gain1 = ctx.createGain();
+                osc1.type = 'triangle'; 
+                osc1.frequency.setValueAtTime(1200, now);
+                osc1.frequency.exponentialRampToValueAtTime(300, now + 0.03);
+                gain1.gain.setValueAtTime(0.12, now);
+                gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+                
+                const osc2 = ctx.createOscillator();
+                const gain2 = ctx.createGain();
+                osc2.type = 'square';
+                osc2.frequency.setValueAtTime(3500, now);
+                osc2.frequency.linearRampToValueAtTime(1500, now + 0.015);
+                gain2.gain.setValueAtTime(0.06, now);
+                gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
+                
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc2.connect(gain2);
+                gain2.connect(ctx.destination);
+                
+                osc1.start(now);
+                osc1.stop(now + 0.03);
+                osc2.start(now);
+                osc2.stop(now + 0.015);
+            } catch (e) {
+                console.log("صوت النقر المطور يحتاج تفاعل أولاً.");
+            }
+        }
+
+        // =========================================================================
+        // 💾 باقي دوال المنصة التعليمية المعتادة
+        // =========================================================================
+        const platformData = {
+            "الرياضيات": {
+                1: {
+                    name: "الفصل الأول: الأعداد المركبة",
+                    lectures: {
+                        1: { title: "المحاضرة 1: مقدمة ومفاهيم أساسية", url: "https://www.youtube.com/watch?v=ntID7dAPrLw&list=RDntID7dAPrLw&start_radio=1" },
+                        2: { title: "المحاضرة 2: مبرهنة ديموافر", url: "https://www.youtube.com/watch?v=q_gBQER7vPk&list=PLbb8qWewX0vZRLtKJmuQHsjWymQO43ien" }
+                    }
+                }
+            },
+            "الكيمياء": {
+                1: {
+                    name: "الفصل الأول: الثرموداينمك",
+                    lectures: {
+                        1: { title: "المحاضرة 1: علم الثرموداينمك والمسعر الكيميائي", url: "ضع الرابط الكامل هنا" }
+                    }
+                }
+            }
+        };
+
+        function extractYouTubeId(url) {
+            if (!url) return null;
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            let match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        const ministerialData = {
+            "الرياضيات": {
+                2026: { role1: "https://example.com/math-2026-d1.pdf", role2: "#" }
+            }
+        };
+
+        function toggleSidebar() { document.getElementById('sidebarMenu').classList.toggle('closed'); }
+        function openSettings() { document.getElementById('settingsModal').classList.add('open'); toggleSidebar(); }
+        function closeSettings() { document.getElementById('settingsModal').classList.remove('open'); }
+        function openContact() { document.getElementById('contactModal').classList.add('open'); toggleSidebar(); }
+        function closeContact() { document.getElementById('contactModal').classList.remove('open'); }
+
+        function setTheme(theme) {
+            const lightBtn = document.getElementById('lightThemeBtn');
+            const darkBtn = document.getElementById('darkThemeBtn');
+            if(theme === 'dark') { document.body.classList.add('dark-theme'); darkBtn.classList.add('active'); lightBtn.classList.remove('active'); }
+            else { document.body.classList.remove('dark-theme'); lightBtn.classList.add('active'); darkBtn.classList.remove('active'); }
+        }
+
+        const materialsData = {
+            common: [
+                { name: "التربية الإسلامية", icon: "fa-mosque", desc: "شرح أحكام التلاوة، السور، والأحاديث المقررة للدرجة الكاملة." },
+                { name: "اللغة العربية", icon: "fa-pen-nib", desc: "قواعد الإعراب، النقد، البلاغة، والأدب بأسلوب وزاري مبسط." },
+                { name: "اللغة الإنجليزية", icon: "fa-language", desc: "شرح القواعد، القطع الاستيعابية، والإنشاءات الوزارية المطلوبة." }
+            ],
+            scientific: [
+                { name: "الرياضيات", icon: "fa-calculator", desc: "الأعداد المركبة، القطوع المخروطية، التفاضل والتكامل بالتفصيل." },
+                { name: "الفيزياء", icon: "fa-atom", desc: "المتسعات، الحث الكهرومغناطيسي، والفيزياء الحديثة بمسائلها." },
+                { name: "الكيمياء", icon: "fa-flask", desc: "الثرموداينمك، الاتزان الكيميائي والأيوني، والكيمياء العضوية." },
+                { name: "الأحياء", icon: "fa-dna", desc: "دراسة الخلية، الأنسجة، التكاثر، والوراثة بالرسومات الكاملة." }
+            ],
+            literary: [
+                { name: "التاريخ", icon: "fa-landmark", desc: "تاريخ الوطن العربي الحديث والمعاصر والتحولات السياسية." },
+                { name: "الجغرافيا", icon: "fa-earth-americas", desc: "جغرافيا البشرية، جغرافيا الزراعة، الصناعة، والسكان." },
+                { name: "الاقتصاد", icon: "fa-chart-line", desc: "المفاهيم الاقتصادية العامة، الدخل القومي، والمالية والإنتاج." },
+                { name: "النقد والأدب المتقدم", icon: "fa-scroll", desc: "المدارس الأدبية والنقدية وتحليل النصوص الشعرية المقررة." }
+            ]
+        };
+
+        async function initDashboard() {
+            // تشغيل محاكي الثلج فوراً
+            createSnowfall();
+
+            const { data: { user } } = await db.auth.getUser();
+            currentUser = user;
+            if (!user) { window.location.href = 'index.html'; return; }
+
+            const { data: profile, error = null } = await db.from('profiles').select('username, department').eq('id', user.id).single();
+
+            if (error || !profile) { document.getElementById('displayUser').innerText = "مرحباً، طالبنا العزيز"; }
+            else {
+                document.getElementById('displayUser').innerText = `مرحباً، ${profile.username}`;
+                document.getElementById('settingsUsername').value = profile.username;
+                document.getElementById('settingsDept').value = profile.department;
+                userDepartment = profile.department;
+                updateWelcomeText(userDepartment);
+            }
+            renderSubjects(userDepartment, 'home');
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        function updateWelcomeText(dept) {
+            const deptText = dept === 'scientific' ? 'الفرع العلمي 🧬' : 'الفرع الأدبي 📚';
+            document.getElementById('welcomeTitle').innerText = `أهلاً بك في منصة ${deptText}`;
+        }
+
+        function navigateTo(view) {
+            document.getElementById('navHome').classList.remove('active');
+            document.getElementById('navLectures').classList.remove('active');
+            document.getElementById('navMinis').classList.remove('active');
+            document.getElementById('backNavContainer').innerHTML = ""; 
+            document.getElementById('progressArea').innerHTML = ""; 
+
+            const sectionTitle = document.getElementById('sectionTitle');
+
+            if (view === 'home') {
+                document.getElementById('navHome').classList.add('active');
+                sectionTitle.innerHTML = `<i class="fas fa-book-open"></i> موادك المنهجية المتاحة:`;
+                renderSubjects(userDepartment, 'home');
+            } else if (view === 'lectures') {
+                document.getElementById('navLectures').classList.add('active');
+                sectionTitle.innerHTML = `<i class="fas fa-video"></i> فصول ومحاضرات فرعك الحالي:`;
+                renderSubjects(userDepartment, 'lectures');
+            } else if (view === 'minis') {
+                document.getElementById('navMinis').classList.add('active');
+                sectionTitle.innerHTML = `<i class="fas fa-paste"></i> اختر المادة لعرض أسئلتها الوزارية:`;
+                renderSubjects(userDepartment, 'minis');
+            }
+            toggleSidebar();
+        }
+
+        function renderSubjects(dept, view) {
+            const contentGrid = document.getElementById('dynamicContent');
+            contentGrid.className = "subjects-grid"; 
+            contentGrid.innerHTML = ""; 
+
+            const studentMaterials = [...materialsData.common, ...materialsData[dept]];
+
+            studentMaterials.forEach(item => {
+                let btnText = 'دخول المادة';
+                let btnIcon = 'fa-arrow-left';
+                let clickAction = '';
+
+                if (view === 'lectures') {
+                    btnText = 'عرض المحاضرات';
+                    btnIcon = 'fa-play-circle';
+                    clickAction = `playClickSound(); showChapters('${item.name}')`;
+                } else if (view === 'minis') {
+                    btnText = 'عرض الوزاريات';
+                    btnIcon = 'fa-file-alt';
+                    clickAction = `playClickSound(); showYears('${item.name}')`;
+                } else {
+                    clickAction = `playClickSound();`;
+                }
+
+                const cardHTML = `
+                    <div class="subject-card">
+                        <div class="subject-icon"><i class="fas ${item.icon}"></i></div>
+                        <h3>${item.name}</h3>
+                        <p>${item.desc}</p>
+                        <button class="enter-btn" onclick="${clickAction}">
+                            <span>${btnText}</span>
+                            <i class="fas ${btnIcon}"></i>
+                        </button>
+                    </div>
+                `;
+                contentGrid.innerHTML += cardHTML;
+            });
+        }
+
+        function isLectureWatched(subject, chapter, lecture) {
+            const watchedKey = `watched_${currentUser ? currentUser.id : 'guest'}_${subject}_ch${chapter}`;
+            let watchedList = JSON.parse(localStorage.getItem(watchedKey)) || [];
+            return watchedList.includes(parseInt(lecture));
+        }
+
+        function toggleLectureStatus(subject, chapter, lecture) {
+            const watchedKey = `watched_${currentUser ? currentUser.id : 'guest'}_${subject}_ch${chapter}`;
+            let watchedList = JSON.parse(localStorage.getItem(watchedKey)) || [];
+            let lecNum = parseInt(lecture);
+
+            if (watchedList.includes(lecNum)) {
+                watchedList = watchedList.filter(id => id !== lecNum);
+            } else {
+                watchedList.push(lecNum);
+            }
+            localStorage.setItem(watchedKey, JSON.stringify(watchedList));
+            
+            updateProgressBar(subject, chapter);
+            showLectures(chapter); 
+            playLecture(chapter, lecture); 
+        }
+
+        function updateProgressBar(subject, chapter) {
+            const watchedKey = `watched_${currentUser ? currentUser.id : 'guest'}_${subject}_ch${chapter}`;
+            let watchedList = JSON.parse(localStorage.getItem(watchedKey)) || [];
+            let completedCount = watchedList.length;
+            
+            let percent = Math.round((completedCount / TOTAL_LECTURES_PER_CHAPTER) * 100);
+            if(percent > 100) percent = 100;
+
+            const progressArea = document.getElementById('progressArea');
+            progressArea.innerHTML = `
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span class="progress-text"><i class="fas fa-tasks"></i> نسبة إنجازك في هذا الفصل: ${percent}%</span>
+                        <span class="progress-text">${completedCount} من أصل ${TOTAL_LECTURES_PER_CHAPTER} محاضرة</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showChapters(subjectName) {
+            currentSelectedSubject = subjectName;
+            document.getElementById('sectionTitle').innerHTML = `<i class="fas fa-folder-open"></i> فصول مادة ${subjectName}:`;
+            document.getElementById('progressArea').innerHTML = ""; 
+            
+            document.getElementById('backNavContainer').innerHTML = `
+                <button class="back-btn" onclick="playClickSound(); navigateTo('lectures')">
+                    <i class="fas fa-arrow-right"></i> العودة للمواد
+                </button>
+            `;
+
+            const contentGrid = document.getElementById('dynamicContent');
+            contentGrid.className = "subjects-grid"; 
+            contentGrid.innerHTML = "";
+
+            for (let i = 1; i <= 10; i++) {
+                let chapterName = `الفصل ${i}`;
+                if (platformData[subjectName] && platformData[subjectName][i] && platformData[subjectName][i].name) {
+                    chapterName = platformData[subjectName][i].name;
+                }
+
+                contentGrid.innerHTML += `
+                    <div class="chapter-card" onclick="playClickSound(); showLectures(${i})">
+                        <h3>${chapterName}</h3>
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
+                `;
+            }
+        }
+
+        function showLectures(chapterNumber) {
+            currentSelectedChapter = chapterNumber;
+            let chName = `الفصل ${chapterNumber}`;
+            if (platformData[currentSelectedSubject] && platformData[currentSelectedSubject][chapterNumber] && platformData[currentSelectedSubject][chapterNumber].name) {
+                chName = platformData[currentSelectedSubject][chapterNumber].name;
+            }
+
+            document.getElementById('sectionTitle').innerHTML = `<i class="fas fa-video"></i> محاضرات ${chName} - مادة ${currentSelectedSubject}:`;
+            
+            document.getElementById('backNavContainer').innerHTML = `
+                <button class="back-btn" onclick="playClickSound(); showChapters('${currentSelectedSubject}')">
+                    <i class="fas fa-arrow-right"></i> العودة لقائمة الفصول
+                </button>
+            `;
+
+            updateProgressBar(currentSelectedSubject, chapterNumber);
+
+            const contentGrid = document.getElementById('dynamicContent');
+            contentGrid.className = "lectures-list-container"; 
+            contentGrid.innerHTML = "";
+
+            contentGrid.innerHTML += `<div id="videoPlayerArea" class="video-player-section"></div>`;
+
+            for (let i = 1; i <= TOTAL_LECTURES_PER_CHAPTER; i++) {
+                let lectureTitle = `المحاضرة ${i}`;
+                if (platformData[currentSelectedSubject] && 
+                    platformData[currentSelectedSubject][chapterNumber] && 
+                    platformData[currentSelectedSubject][chapterNumber].lectures && 
+                    platformData[currentSelectedSubject][chapterNumber].lectures[i] && 
+                    platformData[currentSelectedSubject][chapterNumber].lectures[i].title) {
+                        lectureTitle = platformData[currentSelectedSubject][chapterNumber].lectures[i].title;
+                }
+
+                let isWatched = isLectureWatched(currentSelectedSubject, chapterNumber, i);
+                let iconHTML = isWatched ? `<i class="fas fa-check-circle"></i>` : `<i class="fas fa-play-circle play-icon-btn"></i>`;
+
+                contentGrid.innerHTML += `
+                    <div class="lecture-item" onclick="playClickSound(); playLecture(${chapterNumber}, ${i})">
+                        <span>${lectureTitle}</span>
+                        ${iconHTML}
+                    </div>
+                `;
+            }
+        }
+
+        function playLecture(chapter, lectureNum) {
+            const playerArea = document.getElementById('videoPlayerArea');
+            let fullUrl = "";
+
+            if (platformData[currentSelectedSubject] && 
+                platformData[currentSelectedSubject][chapter] && 
+                platformData[currentSelectedSubject][chapter].lectures && 
+                platformData[currentSelectedSubject][chapter].lectures[lectureNum]) {
+                    fullUrl = platformData[currentSelectedSubject][chapter].lectures[lectureNum].url || "";
+            }
+
+            let videoId = extractYouTubeId(fullUrl);
+
+            if (!videoId) {
+                playerArea.innerHTML = `
+                    <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; padding: 20px; border-radius: 16px; text-align: center; color: #ef4444; font-weight: bold;">
+                        <i class="fas fa-exclamation-circle"></i> عذراً، هذه المحاضرة غير متوفرة حالياً، سيتم رفعها قريباً من قبل إدارة المنصة!
+                    </div>
+                `;
+            } else {
+                let isWatched = isLectureWatched(currentSelectedSubject, chapter, lectureNum);
+                let btnClass = isWatched ? 'done' : 'not-done';
+                let btnText = isWatched ? 'إلغاء الإكمال 🔄' : 'تحديد كمكتمل ✅';
+
+                playerArea.innerHTML = `
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1" allowfullscreen></iframe>
+                    </div>
+                    <button class="complete-action-btn ${btnClass}" onclick="playClickSound(); toggleLectureStatus('${currentSelectedSubject}', ${chapter}, ${lectureNum})">
+                        <span>${btnText}</span>
+                    </button>
+                `;
+                playerArea.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function showYears(subjectName) {
+            currentSelectedSubject = subjectName;
+            document.getElementById('sectionTitle').innerHTML = `<i class="fas fa-history"></i> الأرشيف الوزاري لمادة ${subjectName}:`;
+            document.getElementById('progressArea').innerHTML = ""; 
+            
+            document.getElementById('backNavContainer').innerHTML = `
+                <button class="back-btn" onclick="playClickSound(); navigateTo('minis')">
+                    <i class="fas fa-arrow-right"></i> العودة للمواد
+                </button>
+            `;
+
+            const contentGrid = document.getElementById('dynamicContent');
+            contentGrid.className = "subjects-grid"; 
+            contentGrid.innerHTML = "";
+
+            for (let year = 2026; year >= 1980; year--) {
+                contentGrid.innerHTML += `
+                    <div class="year-card" onclick="playClickSound(); showRoles(${year})">
+                        <h3>${year}</h3>
+                        <span>الأسئلة والأجوبة النموذجية</span>
+                    </div>
+                `;
+            }
+        }
+
+        function showRoles(year) {
+            document.getElementById('sectionTitle').innerHTML = `<i class="fas fa-file-pdf"></i> أدوار سنة ${year} - مادة ${currentSelectedSubject}:`;
+            
+            document.getElementById('backNavContainer').innerHTML = `
+                <button class="back-btn" onclick="playClickSound(); showYears('${currentSelectedSubject}')">
+                    <i class="fas fa-arrow-right"></i> العودة للسنوات
+                </button>
+            `;
+
+            const contentGrid = document.getElementById('dynamicContent');
+            contentGrid.className = "ministerial-list-container"; 
+            contentGrid.innerHTML = "";
+
+            const roles = [
+                { key: 'role_pre', name: 'الامتحانات التمهيدية' },
+                { key: 'role1', name: 'الدور الأول' },
+                { key: 'role2', name: 'الدور الثاني' },
+                { key: 'role3', name: 'الدور الثالث' }
+            ];
+
+            roles.forEach(role => {
+                let pdfUrl = "#";
+                if (ministerialData[currentSelectedSubject] && ministerialData[currentSelectedSubject][year]) {
+                    pdfUrl = ministerialData[currentSelectedSubject][year][role.key] || "#";
+                }
+
+                let clickEvent = `href="${pdfUrl}" target="_blank" onclick="playClickSound()"`;
+                if (pdfUrl === "#") {
+                    clickEvent = `href="javascript:void(0)" onclick="playClickSound(); alert('عذراً، أسئلة هذا الدور غير متوفرة حالياً في الأرشيف وسيتم إضافتها قريباً!')"`;
+                }
+
+                contentGrid.innerHTML += `
+                    <a ${clickEvent} class="exam-role-item">
+                        <span>${role.name}</span>
+                        <i class="fas fa-cloud-download-alt"></i>
+                    </a>
+                `;
+            });
+        }
+
+        async function saveSettings() {
+            if (!currentUser) return;
+            const newUsername = document.getElementById('settingsUsername').value;
+            const newDept = document.getElementById('settingsDept').value;
+            document.getElementById('loader').style.display = 'flex';
+
+            const { error } = await db.from('profiles').update({ username: newUsername, department: newDept }).eq('id', currentUser.id);
+
+            if (error) { alert("حدث خطأ أثناء حفظ التغييرات!"); console.error(error); }
+            else {
+                userDepartment = newDept;
+                document.getElementById('displayUser').innerText = `مرحباً، ${newUsername}`;
+                updateWelcomeText(newDept);
+                const isLecturesActive = document.getElementById('navLectures').classList.contains('active');
+                renderSubjects(userDepartment, isLecturesActive ? 'lectures' : 'home');
+                closeSettings();
+            }
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        async function logout() { await db.auth.signOut(); window.location.href = 'index.html'; }
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>
