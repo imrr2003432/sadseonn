@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>سادسيون نحو النجاح - إدارة الحسابات</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -17,19 +17,20 @@
             font-family: 'Tajawal', sans-serif;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent; /* منع الوميض الأزرق عند اللمس في الهواتف */
         }
 
         body {
-            /* خلفية بتدرجات الأبيض والرمادي الثلجي الفخم */
             background: linear-gradient(-45deg, #eef2f3, #ffffff, #e4e7eb, #ffffff);
             background-size: 400% 400%;
             animation: lightGradient 14s ease infinite;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh; /* تسمح للمحتوى بالتمدد في الهواتف الطويلة */
+            overflow-x: hidden; /* إخفاء التمرير الأفقي فقط */
             position: relative;
+            padding: 20px 15px; /* مسافة أمان حول الكارت في الشاشات الصغيرة */
         }
 
         @keyframes lightGradient {
@@ -38,7 +39,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* كرات إضاءة بيضاء وفضية ناعمة جداً في الخلفية لتعزيز تأثير الزجاج */
+        /* كرات إضاءة متحركة متوافقة مع الموبايل */
         .ambient-glow {
             position: absolute;
             width: 450px;
@@ -72,16 +73,16 @@
             100% { transform: translate(40px, 30px) scale(1.15); }
         }
 
-        /* كرت اللوح الزجاجي الأبيض المصقول */
+        /* كرت اللوح الزجاجي - معالجة العرض ليكون مرناً ومثالياً */
         .card {
-            background: rgba(255, 255, 255, 0.45); /* زجاجي أبيض شفاف */
+            background: rgba(255, 255, 255, 0.45);
             padding: 40px 35px;
             border-radius: 28px;
-            /* حد زجاجي أبيض ناصع ومضيء لإبراز الأطراف */
             border: 1px solid rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
-            width: 430px;
+            width: 100%; /* العرض الكامل */
+            max-width: 430px; /* لا يتجاوز هذا القياس على الحاسوب */
             z-index: 2;
             box-shadow: 0 20px 50px rgba(148, 163, 184, 0.15), 
                         inset 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -93,7 +94,6 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* تنسيق الشعار واسم الموقع العلوي */
         .brand-header {
             text-align: center;
             margin-bottom: 25px;
@@ -114,7 +114,7 @@
 
         .brand-logo i {
             font-size: 26px;
-            color: #1e293b; /* لون داكن فخم للأيقونة ليبرز فوق الأبيض */
+            color: #1e293b;
         }
 
         .brand-name {
@@ -163,7 +163,6 @@
             box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.12);
         }
 
-        /* --- أزرار اختيار القسم (علمي / أدبي) باللون الأبيض الفخم --- */
         .department-container {
             display: flex;
             gap: 12px;
@@ -185,6 +184,7 @@
             justify-content: center;
             align-items: center;
             gap: 8px;
+            user-select: none;
         }
 
         .dept-btn:hover {
@@ -193,7 +193,6 @@
             border-color: rgba(148, 163, 184, 0.5);
         }
 
-        /* تفعيل الزر الأبيض واختياره */
         .dept-btn.active {
             background: #ffffff;
             border-color: #1e293b;
@@ -227,7 +226,6 @@
             padding-left: 50px;
         }
 
-        /* زر الإرسال الرئيسي (تدرج رمادي داكن فخم مأخوذ من أسلوب Apple الاحترافي) */
         button[type="submit"] {
             width: 100%;
             padding: 16px;
@@ -249,15 +247,13 @@
             box-shadow: 0 6px 20px rgba(30, 41, 59, 0.25);
         }
 
-        button[type="submit"]:active {
-            transform: translateY(0);
-        }
-
         .links {
             display: flex;
             justify-content: space-between;
             margin-top: 25px;
             font-size: 13px;
+            gap: 10px; /* مسافة بين الروابط حتى لا تتداخل بالموبايل */
+            flex-wrap: wrap; /* إنزال الرابط للسطر التالي إذا لم تكفِ المساحة */
         }
 
         a {
@@ -278,6 +274,38 @@
         }
         .active-view {
             display: block !important;
+        }
+
+        /* 📱 التوافق الكامل مع شاشات الهواتف المحمولة */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 10px;
+            }
+            .card {
+                padding: 30px 20px; /* تقليل الحواف الداخلية لتبدو العناصر أكبر */
+                border-radius: 22px;
+            }
+            .brand-name {
+                font-size: 20px;
+            }
+            h2 {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+            input, .dept-btn {
+                padding: 12px 14px; /* مواءمة القياسات للأصابع */
+                font-size: 14px;
+            }
+            button[type="submit"] {
+                padding: 14px;
+                font-size: 15px;
+            }
+            .links {
+                justify-content: center; /* توسيط الروابط لتصميم متناسق بالموبايل */
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
         }
     </style>
 </head>
